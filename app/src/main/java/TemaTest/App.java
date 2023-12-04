@@ -3,11 +3,212 @@
  */
 package TemaTest;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class App {
-    
-public App() {/* compiled code */}
+
+    static Utilizator[] users;
+    static Postare[] posts;
+    static Comentariu[] comments;
+
+    public App() {
+    }
+    public static Character[] extractParameterValue (String string) {
+        boolean gasit = false;
+        Character[] parameterValue = new Character[string.length() - 5];
+        int k = 0;
+        for (int i = 0; i < string.length() - 1; i++) {
+            if (string.charAt(i) == '\'') {
+                gasit = true;
+                continue;
+            }
+            if (gasit)
+                parameterValue[k++] = string.charAt(i);
+        }
+
+        return parameterValue;
+    }
+
+    public static String toString(Character[] a)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (Character character : a) {
+            if (character != null)
+                sb.append(character);
+        }
+        return sb.toString();
+    }
+
+    public static String[] usernameAndPassword (String[] strings) {
+        String username = App.toString(App.extractParameterValue(strings[1]));
+        String password = App.toString(App.extractParameterValue(strings[2]));
+        return new String[]{username, password};
+    }
+
+    public static void writeChangesToFile (Utilizator[] users, Comentariu[] comments, Postare[] posts) {
+        cleanup();
+        CSVFileActions.printUsers(users);
+        CSVFileActions.printPosts(posts);
+        CSVFileActions.printComments(comments);
+    }
+
+    public static void cleanup() {
+        try {
+            FileWriter writeComments = new FileWriter(CSVFileActions.commentsFile);
+            writeComments.close();
+
+            FileWriter writePosts = new FileWriter(CSVFileActions.postsFile);
+            writePosts.close();
+
+            FileWriter writeUsers = new FileWriter(CSVFileActions.usersFile);
+            writeUsers.close();
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 
     public static void main(java.lang.String[] strings) {
-        System.out.print("Hello world!");
+        if (strings == null || strings.length == 0) {
+            System.out.print("Hello world!");
+            return;
+        }
+
+        if (strings[0].equals("-cleanup-all")) {
+            cleanup();
+        }
+
+        users = CSVFileActions.users();
+        posts = CSVFileActions.posts();
+        comments = CSVFileActions.comments();
+
+        if (strings[0].equals("-create-user")) {
+             Utilizator.createUser(strings);
+             writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (!Utilizator.isUserAuthentificated(strings))
+            return;
+
+        if (strings[0].equals("-create-post")){
+            Postare.createPost(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-delete-post-by-id")) {
+            Postare.deletePost(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-follow-user-by-username")) {
+            Utilizator.followUser(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-unfollow-user-by-username")) {
+            Utilizator.unfollowUser(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-like-post")) {
+            Postare.likePost(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-unlike-post")) {
+            Postare.unlikePost(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-like-comment")) {
+            Comentariu.likeComment(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-unlike-comment")) {
+            Comentariu.unlikeComment(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-followings-posts")) {
+            String username = App.toString(App.extractParameterValue(strings[1]));
+            Utilizator user = Utilizator.findUser(username);
+            if (user != null)
+                user.getFollowingsPosts(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-user-posts")) {
+            Utilizator.getUserPosts(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-post-details")) {
+            Postare.getPostDetails(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-comment-post")) {
+            Comentariu.commentPost(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-delete-comment-by-id")) {
+            Comentariu.deleteComment(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-following")) {
+            Utilizator.getFollowing(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-followers")) {
+            Utilizator.getFollowers(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-most-liked-posts")) {
+            Postare.getMostLikedPosts(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-most-commented-posts")) {
+            Comentariu.getMostCommentedPosts(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-most-followed-users")) {
+            Utilizator.getMostFollowedUsers(strings);
+            writeChangesToFile(users, comments, posts);
+            return;
+        }
+
+        if (strings[0].equals("-get-most-liked-users")) {
+            Utilizator.getMostLikedUsers(strings);
+            writeChangesToFile(users, comments, posts);
+        }
     }
 }
