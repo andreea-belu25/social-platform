@@ -50,7 +50,7 @@ public class Comentariu implements Likeable {
         return usersThatLiked;
     }
 
-    public static Comentariu doesCommentExist (String commentId) { // nu o fac static pentru ca apartine de obiectul din clasa curenta
+    public static Comentariu doesCommentExist (String commentId) {
         for (int index = 0; index < App.comments.length; index++) {
             if (index == Integer.parseInt(commentId) - 1)
                 return App.comments[index];
@@ -58,13 +58,13 @@ public class Comentariu implements Likeable {
         return null;
     }
 
-    public boolean isPostCommentedByUser (String username) { // nu o fac static pentru ca apartine de obiectul din clasa curenta
+    public boolean isPostCommentedByUser (String username) {
         if (this.username.equals(username))
             return true;
         return false;
     }
 
-    public boolean isAlreadyLiked (String username) { // nu o fac static pentru ca apartine de obiectul din clasa curenta
+    public boolean isAlreadyLiked (String username) {
         if (this.usersThatLiked != null) {
             for (int index = 0; index < this.usersThatLiked.length; index++) {
                 if (this.usersThatLiked[index].equals(username))
@@ -93,7 +93,7 @@ public class Comentariu implements Likeable {
             }
             usersThatLikedCommentCopy[index] = username;
             this.usersThatLiked = usersThatLikedCommentCopy;
-        } else {
+        } else {  // primul username adaugat
             String[] usersThatLikedCommentCopy = new String[1];
             usersThatLikedCommentCopy[0] = username;
             this.usersThatLiked = usersThatLikedCommentCopy;
@@ -149,6 +149,7 @@ public class Comentariu implements Likeable {
     }
 
     public int compareTo(Comentariu comentariu) {
+        //  compararea a doua comentarii dupa datele postarii acestora
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         try {
             Date thisDate = dateFormat.parse(this.dateComment);
@@ -240,7 +241,7 @@ public class Comentariu implements Likeable {
             return;
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");  //  generarea datei comentariului
         Date date = new Date();
         String currentDateAsString = dateFormat.format(date);
         String username = App.toString(App.extractParameterValue(strings[1]));
@@ -276,14 +277,16 @@ public class Comentariu implements Likeable {
     }
 
     public static void getMostCommentedPosts(String[] strings) {
-        //  vector de aparitii
+        //  vector de aparitii al nr de comentarii de la fiecare postare
         Integer[] numberOfComments = new Integer[App.comments.length];
         for (int index = 0; index < App.comments.length; index++)
             numberOfComments[index] = 0;
+
         for (int index = 0; index < App.comments.length; index++) {
             numberOfComments[Integer.parseInt(App.comments[index].getPostId()) - 1]++;
         }
 
+        //  afisarea a 5 sau a lungimii vectorului de aparitie a postarilor cele mai comentate
         String stringToPrint = "{'status':'ok','message': [";
         for (int index1 = 0; index1 < Math.min(numberOfComments.length, 5); index1++) {
             int Max = -1, indexMax = -1;
@@ -303,6 +306,7 @@ public class Comentariu implements Likeable {
             numberOfComments[indexMax] = -1; //  pentru a neglija currentMax la pasul urmator (next index1)
         }
 
+        //  tratez ultimul element separat din cauza acoladelor de la final
         stringToPrint = stringToPrint.substring(0, stringToPrint.length() - 1);
         stringToPrint = stringToPrint + "]}";
         System.out.print(stringToPrint);

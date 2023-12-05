@@ -17,6 +17,8 @@ public class App {
 
     public App() {
     }
+
+    //  obtine valoarea parametrului transmis i.e. -u test => parameterValue = test
     public static Character[] extractParameterValue (String string) {
         boolean gasit = false;
         Character[] parameterValue = new Character[string.length() - 5];
@@ -33,6 +35,7 @@ public class App {
         return parameterValue;
     }
 
+    //  convertire sir de caracter la un element de tip String
     public static String toString(Character[] a)
     {
         StringBuilder sb = new StringBuilder();
@@ -43,12 +46,14 @@ public class App {
         return sb.toString();
     }
 
+    //  extragerea username-ului si a password-ului din sirul primit la input
     public static String[] usernameAndPassword (String[] strings) {
         String username = App.toString(App.extractParameterValue(strings[1]));
         String password = App.toString(App.extractParameterValue(strings[2]));
         return new String[]{username, password};
     }
 
+    //  curatarea fisierului inainte de urmatoarea rularea si updatarea fisierelor cu modificarile actuale
     public static void writeChangesToFile (Utilizator[] users, Comentariu[] comments, Postare[] posts) {
         cleanup();
         CSVFileActions.printUsers(users);
@@ -56,6 +61,7 @@ public class App {
         CSVFileActions.printComments(comments);
     }
 
+    //  curatarea fisierelor actuale prin suprascrierea acestora
     public static void cleanup() {
         try {
             FileWriter writeComments = new FileWriter(CSVFileActions.commentsFile);
@@ -72,26 +78,30 @@ public class App {
         }
     }
 
+    //  tratarea fiecarei comenzi si actualizarea fisierlor cu modificarile efectuate
     public static void main(java.lang.String[] strings) {
         if (strings == null || strings.length == 0) {
             System.out.print("Hello world!");
             return;
         }
 
+        //  curatarea fisierelor inainte de executia comenzii actuale
         if (strings[0].equals("-cleanup-all")) {
             cleanup();
         }
+
 
         users = CSVFileActions.users();
         posts = CSVFileActions.posts();
         comments = CSVFileActions.comments();
 
         if (strings[0].equals("-create-user")) {
-             Utilizator.createUser(strings);
-             writeChangesToFile(users, comments, posts);
+            Utilizator.createUser(strings);
+            writeChangesToFile(users, comments, posts);
             return;
         }
 
+        //  nu ii permit niciunei comenzi sa se execute daca user-ul nu este autentificat
         if (!Utilizator.isUserAuthentificated(strings))
             return;
 

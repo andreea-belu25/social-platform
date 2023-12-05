@@ -58,6 +58,7 @@ public class Utilizator {
         this.followingUsers = usersCopy;
     }
 
+    //  formez un string cu toti utilizatorii pe care ii urmaresc, delimitandu-i prin #
     public String toString() {
         String finalFollowingUsers = "";
         if (this.followingUsers != null && this.followingUsers.length > 0) {
@@ -76,7 +77,8 @@ public class Utilizator {
         return finalUser;
     }
 
-    public boolean isUserFollowed (String username) { // nu o fac static pentru ca apartine de obiectul din clasa curenta
+    // nu o fac static pentru ca apartine de obiectul din clasa curenta
+    public boolean isUserFollowed (String username) {
         if (this.followingUsers != null) {
             for (int index = 0; index < this.followingUsers.length; index++) {
                 if (this.followingUsers[index].equals(username))
@@ -86,7 +88,7 @@ public class Utilizator {
         return false;
     }
 
-    public boolean isUserUnfollowed (String username) { // nu o fac static pentru ca apartine de obiectul din clasa curenta
+    public boolean isUserUnfollowed (String username) {
         if (this.followingUsers != null) {
             for (int index = 0; index < this.followingUsers.length; index++) {
                 if (this.followingUsers[index].equals(username))
@@ -133,6 +135,7 @@ public class Utilizator {
         App.users = usersCopy;
     }
 
+    //  adaug o postare la postarile utilizatorului transmis
     public static Postare[] addPostToUserPosts (String username) {
         Postare[] postsFollowings = new Postare[0];
         for (int index1 = 0; index1 < App.posts.length; index1++) {
@@ -149,7 +152,8 @@ public class Utilizator {
         return postsFollowings;
     }
 
-    public Postare[] addFollowingPost() {
+    //  iau postarile utilizatorilor pe care ii urmaresc
+    public Postare[] getFollowingPost() {
         Postare[] postsFollowings = new Postare[0];
         for (int index = 0; index < this.followingUsers.length; index++) {
             for (int index1 = 0; index1 < App.posts.length; index1++) {
@@ -260,6 +264,7 @@ public class Utilizator {
                 nr++;
         }
 
+        // nu exista user-ul in vectorul users
         if (nr == App.users.length) {
             System.out.print("{ 'status' : 'error', 'message' : 'The username to list posts was not valid'}");
             return;
@@ -287,20 +292,24 @@ public class Utilizator {
             }
         }
 
+        //  vector cu postarile utilizatorului pe care le ordonez in fct de data si apoi le printez
         Postare[] postsFollowings = addPostToUserPosts(username);
         Arrays.sort(postsFollowings);
 
         String stringToPrint = "{ 'status' : " + "'ok'" + ", " + "'message' : [";
         for (int index = 0; index < postsFollowings.length - 1; index++) {
-            stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[index].getPostId()) + "', 'post_text':'";
-            stringToPrint = stringToPrint + postsFollowings[index].getPostText() + "','post_date':'" + postsFollowings[index].getDatePost() + "'},";
+            stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[index].getPostId());
+            stringToPrint = stringToPrint + "', 'post_text':'" + postsFollowings[index].getPostText() ;
+            stringToPrint = stringToPrint +  "','post_date':'" + postsFollowings[index].getDatePost() + "'},";
         }
 
-        stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[postsFollowings.length - 1].getPostId()) + "', 'post_text':'";
-        stringToPrint = stringToPrint + postsFollowings[postsFollowings.length - 1].getPostText() + "','post_date':'" + postsFollowings[postsFollowings.length - 1].getDatePost() + "'}]}";
+        stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[postsFollowings.length - 1].getPostId());
+        stringToPrint = stringToPrint + "', 'post_text':'" + postsFollowings[postsFollowings.length - 1].getPostText();
+        stringToPrint = stringToPrint +  "','post_date':'" + postsFollowings[postsFollowings.length - 1].getDatePost() + "'}]}";
         System.out.println(stringToPrint);
     }
 
+    //  afisarea utilizatorilor pe care ii urmareste user-ul
     public static void getFollowing(String[] strings) {
         String usernameCurrent = App.toString(App.extractParameterValue(strings[1]));
         Utilizator userCurrent = findUser(usernameCurrent);
@@ -315,6 +324,7 @@ public class Utilizator {
         }
     }
 
+    //  afisarea utilizatorilor care urmaresc user-ul
     public static void getFollowers(String[] strings) {
         if (strings.length == 3) {
             System.out.print("{ 'status' : 'error', 'message' : 'No username to list followers was provided'}");
@@ -326,6 +336,7 @@ public class Utilizator {
         for (int index = 0; index < App.users.length; index++) {
             if (!App.users[index].getUsername().equals(usernameToFollow))
                 nr++;
+            //  nu exista in vectorul de users
             if (nr == App.users.length) {
                 System.out.print("{ 'status' : 'error', 'message' : 'The username to list followers was not valid'}");
                 return;
@@ -356,28 +367,36 @@ public class Utilizator {
         }
     }
     public void getFollowingsPosts(String[] strings) {
-        Postare[] postsFollowings = addFollowingPost();
+        Postare[] postsFollowings = getFollowingPost();
         Arrays.sort(postsFollowings);
 
         String stringToPrint = "{ 'status' : " + "'ok'" + ", " + "'message' : [";
         for (int index = 0; index < postsFollowings.length - 1; index++) {
-            stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[index].getPostId()) + "', 'post_text':'";
-            stringToPrint = stringToPrint + postsFollowings[index].getPostText() + "','post_date':'" + postsFollowings[index].getDatePost();
+            stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[index].getPostId());
+            stringToPrint = stringToPrint + "', 'post_text':'" + postsFollowings[index].getPostText() ;
+            stringToPrint = stringToPrint + "','post_date':'" + postsFollowings[index].getDatePost();
             stringToPrint = stringToPrint + "','username':'" + postsFollowings[index].getUsername() + "'},";
         }
 
-        stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[postsFollowings.length - 1].getPostId()) + "', 'post_text':'";
-        stringToPrint = stringToPrint + postsFollowings[postsFollowings.length - 1].getPostText() + "','post_date':'" + postsFollowings[postsFollowings.length - 1].getDatePost();
+        stringToPrint = stringToPrint + "{'post_id':'" + (postsFollowings[postsFollowings.length - 1].getPostId());
+        stringToPrint = stringToPrint + "', 'post_text':'" + postsFollowings[postsFollowings.length - 1].getPostText();
+        stringToPrint = stringToPrint + "','post_date':'" + postsFollowings[postsFollowings.length - 1].getDatePost();
         stringToPrint = stringToPrint + "','username':'" + postsFollowings[postsFollowings.length - 1].getUsername() + "'}]}";
         System.out.println(stringToPrint);
     }
 
     //  following - ii urmaresc eu
     //  followed - cei care ma urmaresc pe mine
+
+    /* folosesc un vector de aparitii pentru a retine cate persoane urmaresc fiecare utilizator
+     * apoi afisez utilizatorii in ordine descrecatoare a nr de followeri, tratand si posibilitatea
+     * in care nu am 5 astfel de utilizatori, caz in care voi afisa toti userii
+     */
     public static void getMostFollowedUsers(String[] strings) {
         Integer[] numberOfFollowersPerUser = new Integer[App.users.length];
         for (int index = 0; index < App.users.length; index++)
             numberOfFollowersPerUser[index] = 0;
+
         for (int index = 0; index < App.users.length; index++) {
             for (int index1 = 0; index1 < App.users[index].getFollowingUsers().length; index1++) {
                 String usernameFollowed = App.users[index].getFollowingUsers()[index1];
@@ -415,6 +434,8 @@ public class Utilizator {
         Integer[] numberOfLikesAndComments = new Integer[App.users.length];
         for (int index = 0; index < App.users.length; index++)
             numberOfLikesAndComments[index] = 0;
+
+        //  retin numarul de like-uri de la postari
         for (int index = 0; index < App.posts.length; index++) {
             Postare post = App.posts[index];
             String username = post.getUsername();
@@ -426,6 +447,7 @@ public class Utilizator {
             }
         }
 
+        //  retin numarul de like-uri de la comentari
         for (int index = 0; index < App.comments.length; index++) {
             Comentariu comment = App.comments[index];
             String username = comment.getUsername();
@@ -438,6 +460,7 @@ public class Utilizator {
             }
         }
 
+        //  analog, ca la alte fct in care am lucrat cu vectorul de aparitii
         String stringToPrint = "{'status':'ok','message': [";
         for (int index1 = 0; index1 < Math.min(numberOfLikesAndComments.length, 5); index1++) {
             int Max = -1, indexMax = -1;

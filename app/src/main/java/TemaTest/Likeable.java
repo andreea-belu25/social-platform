@@ -1,6 +1,6 @@
 package TemaTest;
 
-//  doar definesc fct comune din ambele clase
+//  definesc fct comune din clasele Comentariu si Postare
 public interface Likeable {
     public boolean isAlreadyLiked (String username);
     public void addUsernameThatLiked (String username);

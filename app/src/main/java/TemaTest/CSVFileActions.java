@@ -7,12 +7,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class CSVFileActions{
+    //  accesarea path-ului la care se afla unul dintre cele trei fisiere create
     static String usersPath = System.getProperty("user.dir") + "/users.csv";
     static File usersFile = new File(usersPath);
     static String postsPath = System.getProperty("user.dir") + "/posts.csv";
     static File postsFile = new File(postsPath);
     static String commentsPath = System.getProperty("user.dir") + "/comments.csv";
     static File commentsFile = new File(commentsPath);
+
+    //  functie pentru scriere in fisier
     public static void write(String args, File file) throws IOException {
         FileWriter write = new FileWriter(file, true);
         write.append(args);
@@ -22,7 +25,7 @@ public class CSVFileActions{
     }
 
     public static String doesUserExist(String user) throws IOException {
-        usersFile.createNewFile(); // create file if it doesn't exist
+        usersFile.createNewFile(); // creaza fisierul daca nu exista
         Scanner inputFile = new Scanner(usersFile);
         while(inputFile.hasNext()) {
             String stringFile = inputFile.next();
@@ -37,6 +40,7 @@ public class CSVFileActions{
         return null;
     }
 
+    //  avand fisierul de users, formez un vector cu userii din fisier pe care il returnez
     public static Utilizator[] users() {
         Utilizator[] users = new Utilizator[0];
         try {
@@ -68,6 +72,7 @@ public class CSVFileActions{
         return users;
     }
 
+    //  avand fisierul de posts, formez un vector cu posts-urile din fisier pe care il returnez
     public static Postare[] posts() {
         Postare[] posts = new Postare[0];
         try {
@@ -100,6 +105,7 @@ public class CSVFileActions{
         return posts;
     }
 
+    //  avand fisierul de comments, formez un vector cu comments-urile din fisier pe care il returnez
     public static Comentariu[] comments() {
         Comentariu[] comments = new Comentariu[0];
         try {
@@ -133,6 +139,7 @@ public class CSVFileActions{
         return comments;
     }
 
+    //  printez userii in fisierul specific
     public static void printUsers(Utilizator[] users) {
         for (Utilizator user: users) {
            try {
@@ -143,6 +150,7 @@ public class CSVFileActions{
         }
     }
 
+    //  printez postarile in fisierul specific
     public static void printPosts(Postare[] posts) {
         for (Postare post: posts) {
             try {
@@ -153,6 +161,7 @@ public class CSVFileActions{
         }
     }
 
+    //  printez comentariile in fisierul specific
     public static void printComments(Comentariu[] comments) {
         for (Comentariu comment: comments) {
             try {
