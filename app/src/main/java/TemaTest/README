@@ -1,14 +1,14 @@
 **README**
 
-Fisiere utilizate:
--> users.csv in care retin informatiile despre utilizatori
--> comments.csv in care retin informatiile despre comentariile facute
--> posts.csv in care retin informatiile despre postarile facute
-La fiecare dintre cele 3 fisiere informatiile sunt reprezentate de atributele unui utilizator, unei postari sau unui comentariu definite in clasele specifice.
+ Fisiere utilizate:
+    -> users.csv in care retin informatiile despre utilizatori
+    -> comments.csv in care retin informatiile despre comentariile facute
+    -> posts.csv in care retin informatiile despre postarile facute
+    La fiecare dintre cele 3 fisiere informatiile sunt reprezentate de atributele unui utilizator, unei postari sau unui comentariu definite in clasele specifice.
 
-Interfata Likeable: definirea functilor comune din clasele Comentariu si Postare
+ Interfata Likeable: definirea functilor comune din clasele Comentariu si Postare
 
-Clase:
+ Clase:
     -> CSVFileActions. java:
         Actiuni realizate: scrierea in fisier, formarea vectorilor de users, posts si comments si de asemenea, printarea acestora in fisierele specifice.
 
