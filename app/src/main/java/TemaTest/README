@@ -15,7 +15,7 @@
     -> App. java:
         Tratarea celor 2 cazuri speciale (strings == null sau lungimea sa este 0)
         Intrucat orice actiune a unui utilizator poate fi facuta doar daca acesta este autentificat => realizez aceasta verificare inainte de executia oricarei comenzi.
-        Inainte de executia oricarei comenzi, trebuie sa fie execut cleanup-all, adica stergerea datelor din cele 3 fisiere cu care lucrez.
+        Inainte de executia oricarei comenzi, trebuie sa fie executat cleanup-all, adica stergerea datelor din cele 3 fisiere cu care lucrez.
         Executia fiecarei comenzi presupune apelarea metodei respective din clasa specifica si actualizarea fisierelor cu modificarile realizate.
 
     -> Utilizator.java:
@@ -35,3 +35,24 @@
         Data unui comentariu sau a unei postari este generata prin aceeasi metoda ca cea folosita in checker.
         Pentru fiecare dintre cele doua clase am creat o functie separata de comparare pentru ordonarea postarilor si a comentarilor dupa un criteriu dat (aceste sortari sunt
       pastrate in vectori auxiliari pentru a nu modifica datele initiale ale vectorilor de postari/ comentarii).
+
+ Bonus:
+    Ce alte cazuri limită ați mai trata în această aplicație?
+
+        Conform implementarii mele, am observat urmatoarele cazuri:
+          1. La fct getMostCommentedPosts: tratarea cazului particular in care nicio postare de pe platforma nu a fost comentata;
+          2. Analog pentru getMostLikedPosts;
+          Primele doua cazuri sunt mai mult pentru genul de platforma care este la inceputul lansarii, nefiind popularizata.
+          3. Posibilitatea unui utilizator de a-si da follow singur;
+          4. Daca cazul de sus este posibil => avem si posibilitatea unui utilizator de a-si da unfollow singur.
+
+    Cum ați refactoriza comenzile și răspunsurile din aplicație?
+
+       Alte feature-uri posibile ale platformei:
+          1. Posibilitatea unui utilizator de a-si face anumite postari private. (ex. sa fie vizibile doar pentru anumiti prieteni);
+          2. Posibilitatea unui utilizator de a-si face propria lista de prieteni privata;
+          3. Posibilitatea unui utilizator de a-si arhiva postarile pe care nu le mai vrea publice, dar nici sterse;
+          4. Posibilitatea unui utilizator de a raporta comentariile pe care le considera ofensatoare (cu continut neadecvat, jignitor);
+          5. Posibilitatea unui utilizator de a redistribui/ salva anumite postari ale altor utilizatori pe care le considera importante. (ex. un elev de clasa a doisprezecea
+    vrea sa salveze postarea in care se ofera detalii importante pentru admiterea facultatii pe care vrea sa o urmeze);
+          6. Posibilitatea unui utilizator care a facut comentariu unei postari si a primit raspuns, sa comenteze inapoi la raspunsul primit (reply).
