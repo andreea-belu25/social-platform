@@ -27,3 +27,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+.gitignore
+.gitattributes
+
+gradlew*
+*.gradle
+.gradle
