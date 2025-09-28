@@ -8,9 +8,9 @@ Project Architecture
 Data Storage
 
 The application uses CSV files for data persistence:
-users.csv - Stores user profile information and authentication data
-posts.csv - Contains all posts made by users with metadata
-comments.csv - Stores comments associated with posts
+- users.csv - Stores user profile information and authentication data
+- posts.csv - Contains all posts made by users with metadata
+- comments.csv - Stores comments associated with posts
 
 
 Core Components
