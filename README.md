@@ -1,12 +1,12 @@
 Social Media Platform
-
+--
 A Java-based social media application that allows users to create profiles, make posts, comment, follow other users and interact with content through likes and engagement.
 
 
 Project Architecture
-
+--
 Data Storage
-
+--
 The application uses CSV files for data persistence:
 - users.csv - Stores user profile information and authentication data
 - posts.csv - Contains all posts made by users with metadata
@@ -14,14 +14,14 @@ The application uses CSV files for data persistence:
 
 
 Core Components
-
+--
 Interfaces
-
+--
 - Likeable - Common interface for Post and Comment classes, defining shared functionality for content that can be liked
 
 
 Classes
-
+--
 CSVFileActions.java
 
 - Handles all file I/O operations
@@ -55,7 +55,7 @@ Post.java
 - Post visibility and privacy controls
 
 Comment.java
-- 
+
 - Comment creation and management on posts
 - Comment threading and reply functionality
 - Like/unlike functionality for comments
