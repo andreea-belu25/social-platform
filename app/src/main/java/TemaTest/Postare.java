@@ -8,7 +8,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Comparator;
 import java.text.ParseException;
-public class Postare implements Likeable, Comparable<Postare>{
+
+public class Postare implements Likeable, Comparable<Postare> {
     private String username;
     private String postText;
     private String datePost;
@@ -43,14 +44,15 @@ public class Postare implements Likeable, Comparable<Postare>{
         return postId;
     }
 
-    public static Postare doesPostExist (String postId) {
-            for (int index = 0; index < App.posts.length; index++) {
-                if (index == Integer.parseInt(postId) - 1)
-                    return App.posts[index];
-            }
+    public static Postare doesPostExist(String postId) {
+        for (int index = 0; index < App.posts.length; index++) {
+            if (index == Integer.parseInt(postId) - 1)
+                return App.posts[index];
+        }
         return null;
     }
-    public boolean isAlreadyLiked (String username) {
+
+    public boolean isAlreadyLiked(String username) {
         if (this.usersThatLiked != null) {
             for (int index = 0; index < this.usersThatLiked.length; index++) {
                 if (this.usersThatLiked[index].equals(username))
@@ -60,13 +62,15 @@ public class Postare implements Likeable, Comparable<Postare>{
         return false;
     }
 
-    public void addUsernameThatLiked (String username) {
+    public void addUsernameThatLiked(String username) {
         if (this.usersThatLiked != null) {
             String[] usersThatLikedCopy = new String[this.usersThatLiked.length + 1];
             int index = 0;
+            
             for (index = 0; index < this.usersThatLiked.length; index++) {
                 usersThatLikedCopy[index] = this.usersThatLiked[index];
             }
+            
             usersThatLikedCopy[index] = username;
             this.usersThatLiked = usersThatLikedCopy;
         } else {
@@ -76,7 +80,7 @@ public class Postare implements Likeable, Comparable<Postare>{
         }
     }
 
-    public boolean isUnliked (String username) {
+    public boolean isUnliked(String username) {
         if (this.usersThatLiked != null) {
             for (int index = 0; index < this.usersThatLiked.length; index++) {
                 if (this.usersThatLiked[index].equals(username))
@@ -89,19 +93,23 @@ public class Postare implements Likeable, Comparable<Postare>{
     public void deleteUsernameThatLiked(String username) {
         String[] usersThatLikedCopy = new String[this.usersThatLiked.length - 1];
         int k = 0;
+        
         for (int index = 0; index < this.usersThatLiked.length; index++) {
             if (!this.usersThatLiked[index].equals(username))
                 usersThatLikedCopy[k++] = this.usersThatLiked[index];
         }
+        
         this.usersThatLiked = usersThatLikedCopy;
     }
 
     public static void addNewPost(Postare newPost) {
         Postare[] postsCopy = new Postare[App.posts.length + 1];
         int index = 0;
+        
         for (index = 0; index < App.posts.length; index++) {
             postsCopy[index] = App.posts[index];
         }
+        
         postsCopy[index] = newPost;
         App.posts = postsCopy;
     }
@@ -109,15 +117,18 @@ public class Postare implements Likeable, Comparable<Postare>{
     public static void deleteUserPost(Integer postId) {
         Postare[] postsCopy = new Postare[App.posts.length - 1];
         int k = 0;
+        
         for (int index = 0; index < App.posts.length; index++) {
             if (index != postId)
                 postsCopy[k++] = App.posts[index];
         }
+        
         App.posts = postsCopy;
     }
 
     public String toString() {
         String finalUsersThatLiked = "";
+        
         if (this.usersThatLiked != null && this.usersThatLiked.length > 0) {
             int index = 0;
             for (index = 0; index < this.usersThatLiked.length - 1; index++) {
@@ -126,62 +137,75 @@ public class Postare implements Likeable, Comparable<Postare>{
             }
             finalUsersThatLiked = finalUsersThatLiked + this.usersThatLiked[index];
         }
+        
         String finalUser = "";
         if (!finalUsersThatLiked.isEmpty())
             finalUser = this.username + "," + this.postText + "," + this.datePost + "," + finalUsersThatLiked;
         else
             finalUser = this.username + "," + this.postText + "," + this.datePost;
+            
         return finalUser;
     }
 
-    //  extrag data fiecarei postari pentru a putea ordona postarile in fct de data publicarii lor
+    // Extract the date of each post to be able to order posts by their publication date
     public static Date getDate(String postString) {
         String dateString = postString.split(",")[2].trim();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        
         try {
             return dateFormat.parse(dateString);
         } catch (ParseException exception) {
             exception.printStackTrace();
         }
+        
         return null;
     }
 
-    public static Comentariu[] addCommentToAPost (String postId) {
+    public static Comentariu[] addCommentToAPost(String postId) {
         Comentariu[] commentsPost = new Comentariu[0];
+        
         for (int index1 = 0; index1 < App.comments.length; index1++) {
             if (App.comments[index1].getPostId().equals(postId)) {
                 Comentariu[] commentsCopy = new Comentariu[commentsPost.length + 1];
                 int index2 = 0;
+                
                 for (index2 = 0; index2 < commentsPost.length; index2++) {
                     commentsCopy[index2] = commentsPost[index2];
                 }
+                
                 commentsCopy[index2] = App.comments[index1];
                 commentsPost = commentsCopy;
             }
         }
+        
         return commentsPost;
     }
 
-    //   compar doua postari dupa data postarii la care au fost create
+    // Compare two posts by the posting date they were created
     public int compareTo(Postare postare) {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        
         try {
             Date thisDate = dateFormat.parse(this.datePost);
             Date postDate = dateFormat.parse(postare.datePost);
             int result = thisDate.compareTo(postDate);
             int indexPost = 0, thisIndex = 0;
+            
             if (result != 0)
                 return result;
+                
             for (int index = 0; index < App.posts.length; index++) {
                 if (App.posts[index] == postare)
                     indexPost = index;
                 if (App.posts[index] == this)
                     thisIndex = index;
             }
+            
             return indexPost - thisIndex;
         } catch (ParseException exception) {
             exception.printStackTrace();
         }
+        
         return 0;
     }
 
@@ -192,12 +216,12 @@ public class Postare implements Likeable, Comparable<Postare>{
         }
 
         String text = App.toString(App.extractParameterValue(strings[3]));
-        if(text.length() > 300) {
+        if (text.length() > 300) {
             System.out.print("{ 'status' : 'error', 'message' : 'Post text length exceeded'}");
             return;
         }
 
-        //  crearea si adaugarea unei postari, avand generata o data
+        // Create and add a post, having generated a date
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
         String currentDateAsString = dateFormat.format(date);
@@ -208,7 +232,7 @@ public class Postare implements Likeable, Comparable<Postare>{
     }
 
     public static void deletePost(String[] strings) {
-        if(strings.length == 3) {
+        if (strings.length == 3) {
             System.out.print("{ 'status' : 'error', 'message' : 'No identifier was provided'}");
             return;
         }
@@ -219,6 +243,7 @@ public class Postare implements Likeable, Comparable<Postare>{
             System.out.print("{ 'status' : 'error', 'message' : 'The identifier was not valid'}");
             return;
         }
+        
         deleteUserPost(postId - 1);
         System.out.print("{'status' : 'ok', 'message' : 'Post deleted successfully'}");
     }
@@ -249,6 +274,7 @@ public class Postare implements Likeable, Comparable<Postare>{
 
         if (postToLike != null)
             postToLike.addUsernameThatLiked(username);
+            
         System.out.print("{'status' : 'ok', 'message' : 'Operation executed successfully'}");
     }
 
@@ -278,6 +304,7 @@ public class Postare implements Likeable, Comparable<Postare>{
 
         if (postToUnlike != null)
             postToUnlike.deleteUsernameThatLiked(username);
+            
         System.out.print("{'status' : 'ok', 'message' : 'Operation executed successfully'}");
     }
 
@@ -294,19 +321,20 @@ public class Postare implements Likeable, Comparable<Postare>{
                 nr++;
         }
 
-        //  nu exista postarea
+        // The post doesn't exist
         if (nr == App.posts.length) {
             System.out.print("{ 'status' : 'error', 'message' : 'The post identifier was not valid'}");
             return;
         }
 
-        //  sortare si printare dupa data la care au fost facute comentariile de la postari
+        // Sort and print by the date the comments were made on posts
         Comentariu[] commentsPost = addCommentToAPost(postId);
         Arrays.sort(commentsPost);
 
         Postare post = App.posts[Integer.parseInt(postId) - 1];
         String stringToPrint = "{'status':'ok','message': [{'post_text':'";
         stringToPrint = stringToPrint + post.getPostText() + "','post_date':'" + post.getDatePost();
+        
         if (post.getUsersThatLiked() != null) {
             stringToPrint = stringToPrint + "','username':'" + post.getUsername();
             stringToPrint = stringToPrint + "','number_of_likes':'" + post.getUsersThatLiked().length;
@@ -314,6 +342,7 @@ public class Postare implements Likeable, Comparable<Postare>{
             stringToPrint = stringToPrint + "','username':'" + post.getUsername();
             stringToPrint = stringToPrint + "','number_of_likes':'" + "0";
         }
+        
         stringToPrint = stringToPrint + "','comments': [{'comment_id':'";
 
         for (int index = 0; index < commentsPost.length - 1; index++) {
@@ -321,67 +350,76 @@ public class Postare implements Likeable, Comparable<Postare>{
             stringToPrint = stringToPrint + "','comment_text':'" + commentsPost[index].getCommentText();
             stringToPrint = stringToPrint + "','comment_date':'" + commentsPost[index].getDateComment();
             stringToPrint = stringToPrint + "','username':'" + commentsPost[index].getUsername();
+            
             if (commentsPost[index].getUsersThatLiked() != null)
                 stringToPrint = stringToPrint + "','number_of_likes':'" + commentsPost[index].getUsersThatLiked().length;
             else
                 stringToPrint = stringToPrint + "','number_of_likes':'" + "0";
+                
             stringToPrint = stringToPrint + "'}] ";
         }
 
-        // tratarea ultimului element separat din cauza acoladelor de la final
+        // Treat the last element separately due to final braces
         stringToPrint = stringToPrint + commentsPost[commentsPost.length - 1].getPostId();
         stringToPrint = stringToPrint + "','comment_text':'" + commentsPost[commentsPost.length - 1].getCommentText();
         stringToPrint = stringToPrint + "','comment_date':'" + commentsPost[commentsPost.length - 1].getDateComment();
         stringToPrint = stringToPrint + "','username':'" + commentsPost[commentsPost.length - 1].getUsername();
+        
         if (commentsPost[commentsPost.length - 1].getUsersThatLiked() != null)
             stringToPrint = stringToPrint + "','number_of_likes':'" + commentsPost[commentsPost.length - 1].getUsersThatLiked().length;
         else
             stringToPrint = stringToPrint + "','number_of_likes':'" + "0";
+            
         stringToPrint = stringToPrint + "'}] }] }";
         System.out.println(stringToPrint);
     }
 
     public static void getMostLikedPosts(String[] strings) {
-        //  salvez intr-un vector auxiliar pentru a nu modifica tot vectorul initial de postari
-        Postare[] postsCopy = new Postare [App.posts.length];
+        // Save in an auxiliary vector to not modify the entire initial posts vector
+        Postare[] postsCopy = new Postare[App.posts.length];
         System.arraycopy(App.posts, 0, postsCopy, 0, App.posts.length);
-        //  pe vectorul auxiliar fac sortarea in fct de nr utilizatorilor care au dat like
+        
+        // On the auxiliary vector do sorting based on number of users who liked
         Arrays.sort(postsCopy, new Comparator<Postare>() {
             public int compare(Postare postare, Postare t1) {
                 int lengthPostare = 0;
                 int lengthT1 = 0;
+                
                 if (postare.getUsersThatLiked() != null)
                     lengthPostare = postare.getUsersThatLiked().length;
                 if (t1.getUsersThatLiked() != null)
                     lengthT1 = t1.getUsersThatLiked().length;
 
-                return lengthT1 - lengthPostare; //ordonare descrescatoare
+                return lengthT1 - lengthPostare; // Descending order
             }
         });
 
-        //  dupa sortarea realizata mai sus => afisare cu tratarea separata a ultimului element
+        // After the sorting done above => display with separate treatment of the last element
         String stringToPrint = "{'status':'ok','message': [";
         int min = Math.min(postsCopy.length, 5) - 1;
+        
         for (int index = 0; index < min; index++) {
             stringToPrint = stringToPrint + "{'post_id':'" + postsCopy[index].getPostId();
             stringToPrint = stringToPrint + "','post_text':'" + postsCopy[index].getPostText();
             stringToPrint = stringToPrint + "','post_date':'" + postsCopy[index].getDatePost();
             stringToPrint = stringToPrint + "','username':'" + postsCopy[index].getUsername();
+            
             if (postsCopy[index].getUsersThatLiked() != null)
                 stringToPrint = stringToPrint + "','number_of_likes':'" + postsCopy[index].getUsersThatLiked().length + "'},";
             else
                 stringToPrint = stringToPrint + ",'number_of_likes':'" + "0" + "'},";
-
         }
 
         stringToPrint = stringToPrint + "{'post_id':'" + postsCopy[min].getPostId();
         stringToPrint = stringToPrint + "','post_text':'" + postsCopy[min].getPostText();
         stringToPrint = stringToPrint + "','post_date':'" + postsCopy[min].getDatePost();
         stringToPrint = stringToPrint + "','username':'" + postsCopy[min].getUsername();
+        
         if (postsCopy[min].getUsersThatLiked() != null)
             stringToPrint = stringToPrint + "','number_of_likes':'" + postsCopy[min].getUsersThatLiked().length + "'} ]}";
         else
             stringToPrint = stringToPrint + "','number_of_likes':'" + "0" + "'} ]}";
+            
         System.out.print(stringToPrint);
     }
 }
