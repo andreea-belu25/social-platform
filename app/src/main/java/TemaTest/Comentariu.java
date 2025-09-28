@@ -50,7 +50,7 @@ public class Comentariu implements Likeable {
         return usersThatLiked;
     }
 
-    public static Comentariu doesCommentExist (String commentId) {
+    public static Comentariu doesCommentExist(String commentId) {
         for (int index = 0; index < App.comments.length; index++) {
             if (index == Integer.parseInt(commentId) - 1)
                 return App.comments[index];
@@ -58,13 +58,13 @@ public class Comentariu implements Likeable {
         return null;
     }
 
-    public boolean isPostCommentedByUser (String username) {
+    public boolean isPostCommentedByUser(String username) {
         if (this.username.equals(username))
             return true;
         return false;
     }
 
-    public boolean isAlreadyLiked (String username) {
+    public boolean isAlreadyLiked(String username) {
         if (this.usersThatLiked != null) {
             for (int index = 0; index < this.usersThatLiked.length; index++) {
                 if (this.usersThatLiked[index].equals(username))
@@ -77,23 +77,27 @@ public class Comentariu implements Likeable {
     public static void deleteUserComment(Integer commentId) {
         Comentariu[] commentsCopy = new Comentariu[App.comments.length - 1];
         int k = 0;
+        
         for (int index = 0; index < App.comments.length; index++) {
             if (index != commentId)
                 commentsCopy[k++] = App.comments[index];
         }
+        
         App.comments = commentsCopy;
     }
 
-    public void addUsernameThatLiked (String username) {
+    public void addUsernameThatLiked(String username) {
         if (this.usersThatLiked != null) {
             String[] usersThatLikedCommentCopy = new String[this.usersThatLiked.length + 1];
             int index = 0;
+            
             for (index = 0; index < this.usersThatLiked.length; index++) {
                 usersThatLikedCommentCopy[index] = this.usersThatLiked[index];
             }
+            
             usersThatLikedCommentCopy[index] = username;
             this.usersThatLiked = usersThatLikedCommentCopy;
-        } else {  // primul username adaugat
+        } else {  // First username added
             String[] usersThatLikedCommentCopy = new String[1];
             usersThatLikedCommentCopy[0] = username;
             this.usersThatLiked = usersThatLikedCommentCopy;
@@ -102,6 +106,7 @@ public class Comentariu implements Likeable {
 
     public String toString() {
         String finalUsersThatLiked = "";
+        
         if (this.usersThatLiked != null && this.usersThatLiked.length > 0) {
             int index = 0;
             for (index = 0; index < this.usersThatLiked.length - 1; index++) {
@@ -110,20 +115,24 @@ public class Comentariu implements Likeable {
             }
             finalUsersThatLiked = finalUsersThatLiked + this.usersThatLiked[index];
         }
+        
         String finalUser = "";
         if (!finalUsersThatLiked.isEmpty())
             finalUser = this.postId + "," + this.username + "," + this.commentText + "," + this.dateComment + "," + finalUsersThatLiked;
         else
             finalUser = this.postId + "," + this.username + "," + this.commentText + "," + this.dateComment;
+            
         return finalUser;
     }
 
     public static void addNewComment(Comentariu newComment) {
         Comentariu[] commentsCopy = new Comentariu[App.comments.length + 1];
         int index = 0;
+        
         for (index = 0; index < App.comments.length; index++) {
             commentsCopy[index] = App.comments[index];
         }
+        
         commentsCopy[index] = newComment;
         App.comments = commentsCopy;
     }
@@ -141,33 +150,40 @@ public class Comentariu implements Likeable {
     public void deleteUsernameThatLiked(String username) {
         String[] usersThatLikedCommentCopy = new String[this.usersThatLiked.length - 1];
         int k = 0;
+        
         for (int index = 0; index < this.usersThatLiked.length; index++) {
             if (!this.usersThatLiked[index].equals(username))
                 usersThatLikedCommentCopy[k++] = this.usersThatLiked[index];
         }
+        
         this.usersThatLiked = usersThatLikedCommentCopy;
     }
 
     public int compareTo(Comentariu comentariu) {
-        //  compararea a doua comentarii dupa datele postarii acestora
+        // Compare two comments by their posting dates
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        
         try {
             Date thisDate = dateFormat.parse(this.dateComment);
             Date commentDate = dateFormat.parse(comentariu.getDateComment());
             int result = thisDate.compareTo(commentDate);
             int indexComment = 0, thisIndex = 0;
+            
             if (result != 0)
                 return result;
+                
             for (int index = 0; index < App.comments.length; index++) {
                 if (App.comments[index] == comentariu)
                     indexComment = index;
                 if (App.comments[index] == this)
                     thisIndex = index;
             }
+            
             return indexComment - thisIndex;
         } catch (ParseException exception) {
             exception.printStackTrace();
         }
+        
         return 0;
     }
 
@@ -197,6 +213,7 @@ public class Comentariu implements Likeable {
 
         if (commentToLike != null)
             commentToLike.addUsernameThatLiked(username);
+            
         System.out.print("{ 'status' : 'ok', 'message' : 'Operation executed successfully'}");
     }
 
@@ -226,6 +243,7 @@ public class Comentariu implements Likeable {
 
         if (commentToUnlike != null)
             commentToUnlike.deleteUsernameThatLiked(username);
+            
         System.out.print("{'status' : 'ok', 'message' : 'Operation executed successfully'}");
     }
 
@@ -241,17 +259,20 @@ public class Comentariu implements Likeable {
             return;
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");  //  generarea datei comentariului
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");  // Generate comment date
         Date date = new Date();
         String currentDateAsString = dateFormat.format(date);
         String username = App.toString(App.extractParameterValue(strings[1]));
         String postId = App.toString(App.extractParameterValue(strings[3]));
+        
         if (Postare.doesPostExist(postId) == null)
             return;
+            
         Comentariu newComment = new Comentariu(postId, username, text, currentDateAsString);
         addNewComment(newComment);
         System.out.println("{ 'status' : 'ok', 'message' : 'Comment added successfully'}");
     }
+
     public static void deleteComment(String[] strings) {
         if (strings.length == 3) {
             System.out.print("{ 'status' : 'error', 'message' : 'No identifier was provided'}");
@@ -268,16 +289,18 @@ public class Comentariu implements Likeable {
         Comentariu commentToDelete = doesCommentExist(commentId);
         if (commentToDelete == null)
             return;
+            
         if (!commentToDelete.isPostCommentedByUser(username)) {
             System.out.print("{ 'status' : 'error', 'message' : 'The identifier was not valid'}");
             return;
         }
+        
         deleteUserComment(Integer.parseInt(commentId) - 1);
         System.out.println("{ 'status' : 'ok', 'message' : 'Operation executed successfully'}");
     }
 
     public static void getMostCommentedPosts(String[] strings) {
-        //  vector de aparitii al nr de comentarii de la fiecare postare
+        // Occurrence vector for number of comments from each post
         Integer[] numberOfComments = new Integer[App.comments.length];
         for (int index = 0; index < App.comments.length; index++)
             numberOfComments[index] = 0;
@@ -286,10 +309,11 @@ public class Comentariu implements Likeable {
             numberOfComments[Integer.parseInt(App.comments[index].getPostId()) - 1]++;
         }
 
-        //  afisarea a 5 sau a lungimii vectorului de aparitie a postarilor cele mai comentate
+        // Display 5 or the length of the most commented posts occurrence vector
         String stringToPrint = "{'status':'ok','message': [";
         for (int index1 = 0; index1 < Math.min(numberOfComments.length, 5); index1++) {
             int Max = -1, indexMax = -1;
+            
             for (int index = 0; index < numberOfComments.length; index++) {
                 if (numberOfComments[index] > Max) {
                     Max = numberOfComments[index];
@@ -303,13 +327,12 @@ public class Comentariu implements Likeable {
             stringToPrint = stringToPrint + "','post_date':'" + postToPrint.getDatePost();
             stringToPrint = stringToPrint + "','username':'" + postToPrint.getUsername();
             stringToPrint = stringToPrint + "','number_of_comments':'" + numberOfComments[indexMax] + "'},";
-            numberOfComments[indexMax] = -1; //  pentru a neglija currentMax la pasul urmator (next index1)
+            numberOfComments[indexMax] = -1; // To ignore currentMax at next step (next index1)
         }
 
-        //  tratez ultimul element separat din cauza acoladelor de la final
+        // Treat last element separately due to final braces
         stringToPrint = stringToPrint.substring(0, stringToPrint.length() - 1);
         stringToPrint = stringToPrint + "]}";
         System.out.print(stringToPrint);
     }
 }
-
