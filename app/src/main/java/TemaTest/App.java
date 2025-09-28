@@ -18,26 +18,26 @@ public class App {
     public App() {
     }
 
-    //  obtine valoarea parametrului transmis i.e. -u test => parameterValue = test
-    public static Character[] extractParameterValue (String string) {
-        boolean gasit = false;
+    // Get the value of the transmitted parameter i.e. -u test => parameterValue = test
+    public static Character[] extractParameterValue(String string) {
+        boolean found = false;
         Character[] parameterValue = new Character[string.length() - 5];
         int k = 0;
+        
         for (int i = 0; i < string.length() - 1; i++) {
             if (string.charAt(i) == '\'') {
-                gasit = true;
+                found = true;
                 continue;
             }
-            if (gasit)
+            if (found)
                 parameterValue[k++] = string.charAt(i);
         }
 
         return parameterValue;
     }
 
-    //  convertire sir de caracter la un element de tip String
-    public static String toString(Character[] a)
-    {
+    // Convert character array to String element
+    public static String toString(Character[] a) {
         StringBuilder sb = new StringBuilder();
         for (Character character : a) {
             if (character != null)
@@ -46,22 +46,22 @@ public class App {
         return sb.toString();
     }
 
-    //  extragerea username-ului si a password-ului din sirul primit la input
-    public static String[] usernameAndPassword (String[] strings) {
+    // Extract username and password from input string received
+    public static String[] usernameAndPassword(String[] strings) {
         String username = App.toString(App.extractParameterValue(strings[1]));
         String password = App.toString(App.extractParameterValue(strings[2]));
         return new String[]{username, password};
     }
 
-    //  curatarea fisierului inainte de urmatoarea rularea si updatarea fisierelor cu modificarile actuale
-    public static void writeChangesToFile (Utilizator[] users, Comentariu[] comments, Postare[] posts) {
+    // Clean files before next run and update files with current changes
+    public static void writeChangesToFile(Utilizator[] users, Comentariu[] comments, Postare[] posts) {
         cleanup();
         CSVFileActions.printUsers(users);
         CSVFileActions.printPosts(posts);
         CSVFileActions.printComments(comments);
     }
 
-    //  curatarea fisierelor actuale prin suprascrierea acestora
+    // Clean current files by overwriting them
     public static void cleanup() {
         try {
             FileWriter writeComments = new FileWriter(CSVFileActions.commentsFile);
@@ -78,18 +78,17 @@ public class App {
         }
     }
 
-    //  tratarea fiecarei comenzi si actualizarea fisierlor cu modificarile efectuate
+    // Handle each command and update files with changes made
     public static void main(java.lang.String[] strings) {
         if (strings == null || strings.length == 0) {
             System.out.print("Hello world!");
             return;
         }
 
-        //  curatarea fisierelor inainte de executia comenzii actuale
+        // Clean files before executing current command
         if (strings[0].equals("-cleanup-all")) {
             cleanup();
         }
-
 
         users = CSVFileActions.users();
         posts = CSVFileActions.posts();
@@ -101,11 +100,11 @@ public class App {
             return;
         }
 
-        //  nu ii permit niciunei comenzi sa se execute daca user-ul nu este autentificat
+        // Don't allow any command to execute if user is not authenticated
         if (!Utilizator.isUserAuthentificated(strings))
             return;
 
-        if (strings[0].equals("-create-post")){
+        if (strings[0].equals("-create-post")) {
             Postare.createPost(strings);
             writeChangesToFile(users, comments, posts);
             return;
